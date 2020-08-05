@@ -1,39 +1,61 @@
 import React from 'react';
 
 import whatsappIcom from '../../assets/images/icons/whatsapp.svg';
+import api from '../../services/api';
 
 import './styles.css';
 
-const TeacherItem: React.FC = () => {
+export interface Teacher {
+  id: number;
+  avatar: string;
+  bio: string;
+  cost: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+interface TeacherItemsProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemsProps> = ({ teacher }) => {
+  
+  function createConnection() {
+    api.post('connections', {
+      user_id: teacher.id,
+    })
+  }
+  
   return (
     <article className="teacher-item">
           <header>
-            <img src="https://avatars2.githubusercontent.com/u/22474353?s=400&u=206de9f22291e00c20ec5840c88f09806636e8c3&v=4" alt="Evandro Barbosa"/>
+            <img src={teacher.avatar} alt={teacher.name}/>
             <div>
-              <strong>Evandro Barbosa</strong>
-              <span>Flutter Desktop</span>
+              <strong>{teacher.name}</strong>
+              <span>{teacher.subject}</span>
             </div>
           </header>
 
           <p>
-            Entusiasta das melhores tecnologias de programação
-            <br />
-            <br />
-            Apaixonado por criar coisas que possa ser util para as pessoas e comunidade,
-            com objetivo de mudar a vida das pessoas em seu redor.
+            {teacher.bio}
           </p>
 
           <footer>
             <p>
               Preço/hora
 
-              <strong>R$ 150,00</strong>
+              <strong>R$ {teacher.cost}</strong>
             </p>
 
-            <button type="button">
+            <a 
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={createConnection}
+              href={`https://wa.me/${teacher.whatsapp}`}>
               <img src={whatsappIcom} alt="Whatsapp"/>
               Entrar em contato
-            </button>
+            </a>
           </footer>
 
         </article>
